@@ -19,7 +19,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     self.view.backgroundColor = [UIColor lightGrayColor];
-    [self no3];
+    [self no4];
 }
 
 
@@ -138,6 +138,86 @@
     ///获取触摸到的layer1-包含子层
     CALayer *layer = [layer1 hitTest:CGPointMake(199, 199)];
     if (layer) {}
+}
+
+
+#pragma mark 第四章 - 视觉效果
+- (void)no4 {
+    CALayer *layer = [CALayer layer];
+    layer.frame = CGRectMake(150, 100, 100, 100);
+    layer.backgroundColor = [UIColor whiteColor].CGColor;
+    [self.view.layer addSublayer:layer];
+    
+    CALayer *imageLayer = [CALayer layer];
+    UIImage *zn = [UIImage imageNamed:@"block.png"];
+    imageLayer.contents = (id)(zn.CGImage);
+    imageLayer.frame = CGRectMake(150, 250, 100, 100);
+    imageLayer.contentsScale = [UIScreen mainScreen].scale;
+    imageLayer.contentsGravity = kCAGravityResizeAspect;
+    [self.view.layer addSublayer:imageLayer];
+    
+    ///蒙版
+    CALayer *maskLayer = [CALayer layer];
+    UIImage *block1 = [UIImage imageNamed:@"setting.png"];
+    maskLayer.contents = (id)(block1.CGImage);
+    maskLayer.frame = imageLayer.bounds;
+    maskLayer.contentsGravity = kCAGravityResizeAspect;
+    imageLayer.mask = maskLayer;
+
+    
+    ///圆角
+    ///只影响颜色，不影响背景，masksToBounds可以裁切超出父图层的区域
+    layer.cornerRadius = 20;
+    
+    ///图层边框
+    layer.borderWidth = 2;
+    layer.borderColor = [UIColor darkGrayColor].CGColor;
+    
+    ///阴影
+    ///{0.0不可见 ~ 1.0不透明}
+    layer.shadowOpacity = 0.7;
+    ///阴影颜色
+    layer.shadowColor = [UIColor blackColor].CGColor;
+    ///方向、距离 默认（0,-3）,偏上
+    layer.shadowOffset = CGSizeMake(3, 3);
+    ///模糊度
+    layer.shadowRadius = 4;
+    ///阴影的计算继承自内容而不是外形
+    imageLayer.shadowOpacity = 0.8;
+    imageLayer.shadowOffset = CGSizeMake(0, 5);
+    imageLayer.shadowRadius = 5;
+    ///如果在阴影图层使用masksToBounds，图层会被剪切掉
+    ///shadowPath使用绘制的图形充当阴影，在提前知道阴影形状的前提下能提高性能
+    
+    
+    ///拉伸过滤
+    CALayer *layer1 = [CALayer layer];
+    layer1.frame = CGRectMake(0, 40, 40, 40);
+    layer1.contents = (id)([UIImage imageNamed:@"block1.png"].CGImage);
+    [self.view.layer addSublayer:layer1];
+    //kCAFilterNearest kCAFilterLinear kCAFilterTrilinear
+    layer1.minificationFilter = kCAFilterTrilinear;
+//    layer1.magnificationFilter = kCAFilterNearest;
+    
+    
+    ///组透明-光栅化（慎用，搭配Scala）
+    UIButton *btn1 = [self customButton];
+    [self.view addSubview:btn1];
+    btn1.alpha = 0.5;
+    btn1.layer.shouldRasterize = YES;
+}
+
+- (UIButton *)customButton {
+    CGRect frame = CGRectMake(20, 120, 80, 80);
+    UIButton *btn = [[UIButton alloc] initWithFrame:frame];
+    btn.backgroundColor = [UIColor whiteColor];
+    CGRect frame1 = CGRectMake(20, 20, 40, 40);
+    UILabel *lab = [[UILabel alloc] initWithFrame:frame1];
+    lab.text = @"wAnG";
+    lab.textAlignment = NSTextAlignmentCenter;
+    [btn addSubview:lab];
+    return btn;
+    
 }
 
 @end
