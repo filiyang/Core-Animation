@@ -19,7 +19,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     self.view.backgroundColor = [UIColor lightGrayColor];
-    [self no4];
+    [self no5_2];
 }
 
 
@@ -219,5 +219,87 @@
     return btn;
     
 }
+
+#pragma mark 第五章 - 变换
+///角度转弧度
+#define RADIANS_TO_DEGREES(x) ((x)/M_PI * 180.0)
+///仿射变换
+- (void)no5_1 {
+    //旋转-单位为弧度
+    //CGAffineTransformMakeRotation(CGFloat angle)
+    //缩放
+    //CGAffineTransformMakeScale(CGFloat sx, CGFloat sy)
+    //平移
+    //CGAffineTransformMakeTranslation(CGFloat tx, CGFloat ty)
+    //view.transform == layer.affineTransform
+    
+    CALayer *layer1 = [CALayer layer];
+    layer1.frame = CGRectMake(100, 100, 100, 100);
+    UIImage *zn = [UIImage imageNamed:@"zn.png"];
+    layer1.contents = (id)zn.CGImage;
+    [self.view.layer addSublayer:layer1];
+
+//    layer1.affineTransform = CGAffineTransformMakeRotation(M_PI_4);
+//    layer1.affineTransform = CGAffineTransformMakeScale(0.5, 0.8);
+//    layer1.affineTransform = CGAffineTransformMakeTranslation(100, 0);
+    
+    ///混合变换
+    //CGAffineTransformRotate(CGAffineTransform t, CGFloat angle)
+    //CGAffineTransformScale(CGAffineTransform t, CGFloat sx, CGFloat sy)
+    //CGAffineTransformTranslate(CGAffineTransform t, CGFloat tx, CGFloat ty)
+    //初始化生成一个什么都不做的变换
+    //CGAffineTransformIdentity
+    //混合两个已经存在的变换
+    //CGAffineTransformConcat(CGAffineTransform t1, CGAffineTransform t2)
+    
+//    CGAffineTransform transform = CGAffineTransformIdentity;
+//    transform = CGAffineTransformRotate(transform, RADIANS_TO_DEGREES(45));
+//    transform = CGAffineTransformScale(transform, 0.5, 0.5);
+//    ///平移的效果会作用在之前旋转和缩放之上，所以顺序不同，结果也不同
+//    transform = CGAffineTransformTranslate(transform, 100, 100);
+//    layer1.affineTransform = transform;
+}
+
+///3D变换
+- (void)no5_2 {
+    CALayer *layer1 = [CALayer layer];
+    layer1.frame = CGRectMake(10, 100, 100, 100);
+    UIImage *zn = [UIImage imageNamed:@"block.png"];
+    layer1.contents = (id)zn.CGImage;
+    [self.view.layer addSublayer:layer1];
+    CALayer *layer2 = [CALayer layer];
+    layer2.frame = CGRectMake(200, 100, 100, 100);
+    UIImage *zn1 = [UIImage imageNamed:@"block1.png"];
+    layer2.contents = (id)zn1.CGImage;
+    [self.view.layer addSublayer:layer2];
+    
+    //CATransform3DMakeRotation(CGFloat angle, CGFloat x, CGFloat y, CGFloat z)
+    //CATransform3DMakeScale(CGFloat sx, CGFloat sy, CGFloat sz)
+    //CATransform3DMakeTranslation(CGFloat tx, CGFloat ty, CGFloat tz)
+    CATransform3D perspective = CATransform3DIdentity;
+    ///m34用来表示视角的距离，默认是0，则不能体现3D效果，使用-1除以(500 ~ 1000)可以获得效果
+    perspective.m34 = -1.0 / 500.0;
+    
+    CATransform3D transform1 = CATransform3DMakeRotation(M_PI , 1, 0, 0);
+    CATransform3D transform2 = CATransform3DMakeRotation(-M_PI_4, 0, 1, 0);
+    //使整个图层的视图都具有相同的灭点
+    self.view.layer.sublayerTransform  = perspective;
+    ///layer1此时会显示为背面的镜像，doubleSided可以控制是否绘制背面
+    layer1.doubleSided = YES;
+    layer1.transform = transform1;
+    layer2.transform = transform2;
+    
+    
+   
+    
+//    CATransform3D transform2 = CATransform3DIdentity;
+    ///m34用来表示视角的距离，默认是0，则不能体现3D效果，使用-1除以(500 ~ 1000)可以获得效果
+//    transform2.m34 = -1.0 / 1.0;
+//    transform2 = CATransform3DRotate(transform, M_PI_2, 0, 1, 0);
+    
+}
+
+
+
 
 @end
