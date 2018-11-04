@@ -19,7 +19,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     self.view.backgroundColor = [UIColor lightGrayColor];
-    [self no5_2];
+    [self no6_1];
 }
 
 
@@ -299,7 +299,32 @@
     
 }
 
-
-
+#pragma mark - 专用图层
+///CAShapeLayer
+- (void)no6_1 {
+    ///矢量图层
+    ///使用UIBezierPath进行绘制，不必考虑内存释放的问题
+    ///可以使用CAShapeLayer单独绘制某一个角的圆角
+    CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+    shapeLayer.strokeColor = [UIColor redColor].CGColor;
+    shapeLayer.fillColor = [UIColor clearColor].CGColor;
+    shapeLayer.lineWidth  = 5;
+    shapeLayer.lineJoin = kCALineJoinRound;
+    shapeLayer.lineCap = kCALineCapRound;
+    
+    
+    UIBezierPath *path = [[UIBezierPath alloc] init];
+    [path moveToPoint:CGPointMake(175, 100)];
+    [path addArcWithCenter:CGPointMake(150, 100) radius:25 startAngle:0 endAngle:8 clockwise:YES];
+    [path moveToPoint:CGPointMake(150, 100)];
+    [path addLineToPoint:CGPointMake(150, 125)];
+    
+    shapeLayer.path  = path.CGPath;
+    [self.view.layer addSublayer:shapeLayer];
+}
+///CATextlayer
+- (void)no6_2 {
+    ///相比于UILabel提供更丰富的接口
+}
 
 @end
